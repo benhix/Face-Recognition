@@ -8,4 +8,5 @@ Create a virtual environment and install the requirements.txt
 
 1) Run addPerson.py. It will ask for an ID. Start at 1 for first person, 2 for second person, etc
 2) Run trainer.py. This will train the model on the added faces. The trainer will need to be run every time a new person is added
-3) 
+3) Open mainScreen.py and add your name to the 'names' variable (this will be done progrmatically in later versions)
+4) Run main.py
