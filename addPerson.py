@@ -2,6 +2,13 @@ import cv2
 import os
 
 
+# Set the path for the dataset directory
+dataset_path = "Dataset"
+
+# Check if the dataset directory exists, if not, create it
+if not os.path.exists(dataset_path):
+    os.makedirs(dataset_path)
+
 cam = cv2.VideoCapture(0)
 cam.set(3, 640) # set video width
 cam.set(4, 480) # set video height
