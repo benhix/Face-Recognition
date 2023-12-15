@@ -7,6 +7,10 @@ from PySide6.QtGui import QImage, QPixmap, QPainter
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton, QFrame
 
 
+ # Names related to ids
+# Make it read from file (todo)
+names = ['None']
+
 class MainWindow(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -68,9 +72,7 @@ class MainWindow(QWidget):
         # Initiate id counter
         id = 0
 
-        # Names related to ids
-        # Make it read from file (todo)
-        names = ['None', 'Ben', 'Issy', 'Jesse']
+       
 
         # Take frame capture 
         ret, frame = self.capture.read()
