@@ -59,16 +59,17 @@ class MainWindow(QWidget):
 
     def update_camera_feed(self):
         recognizer = cv2.face.LBPHFaceRecognizer_create()
-        recognizer.read('trainer/trainer.yml')
-        cascadePath = "Cascades/haarcascade_frontalface_default.xml"
+        recognizer.read('assets/Trainer/trainer.yml')
+        cascadePath = "assets/Cascades/haarcascade_frontalface_default.xml"
         faceCascade = cv2.CascadeClassifier(cascadePath)
         font = cv2.FONT_HERSHEY_SIMPLEX
         # Load classifier for face detection
-        faceCascade = cv2.CascadeClassifier('Cascades/haarcascade_frontalface_default.xml')
+        faceCascade = cv2.CascadeClassifier('assets/Cascades/haarcascade_frontalface_default.xml')
         # Initiate id counter
         id = 0
 
         # Names related to ids
+        # Make it read from file (todo)
         names = ['None', 'Ben', 'Issy', 'Jesse']
 
         # Take frame capture 

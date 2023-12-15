@@ -3,7 +3,7 @@ import os
 
 
 # Set the path for the dataset directory
-dataset_path = "Dataset"
+dataset_path = "assets/Dataset"
 
 # Check if the dataset directory exists, if not, create it
 if not os.path.exists(dataset_path):
@@ -13,7 +13,7 @@ cam = cv2.VideoCapture(0)
 cam.set(3, 640) # set video width
 cam.set(4, 480) # set video height
 
-face_detector = cv2.CascadeClassifier('Cascades/haarcascade_frontalface_default.xml')
+face_detector = cv2.CascadeClassifier('assets/Cascades/haarcascade_frontalface_default.xml')
 # For each person, enter one numeric face id
 face_id = input('\n enter user id end press <return> ==>  ')
 print("\n [INFO] Initializing face capture. Look the camera and wait ...")
@@ -31,7 +31,7 @@ while(True):
         count += 1
 
         # Save the captured image into the datasets folder
-        cv2.imwrite("Dataset/user." + str(face_id) + '.' +  
+        cv2.imwrite("assets/Dataset/user." + str(face_id) + '.' +  
                     str(count) + ".jpg", gray[y:y+h,x:x+w])
         cv2.imshow('image', img)
 
