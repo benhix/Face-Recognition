@@ -2,27 +2,31 @@ import sys
 import cv2
 import numpy as np
 import os
+from load_names import load_names_from_file
 from PySide6.QtCore import Qt, QTimer, Slot, Signal
 from PySide6.QtGui import QImage, QPixmap, QPainter 
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton, QFrame
 
 
- # Names related to ids
-# Make it read from file (todo)
-names = ['None']
+CAMERA_WIDTH = 1024
+CAMERA_HEIGHT = 576
+CAMERA_FPS = 30
+TRAINER_PATH = 'assets/Trainer/trainer.yml'
+CASCADE_PATH = 'assets/Cascades/haarcascade_frontalface_default.xml'
+NAMES = load_names_from_file('assets/Names/names.json')
 
 class MainWindow(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-
-        # Set window properties
         self.setWindowTitle("Camera Feed")
-
+        self.initUI()
+        self.initCamera()
+        self.startCameraFeed()
+    
+    def initUI(self):
         # Create QLabel to hold everything
         self.background = QLabel(self)
         self.background.setGeometry(0, 0, 1920, 1080)
-        self.bg = QPixmap('black.jpg')
-        self.background.setPixmap(self.bg)
 
         # Create a QLabel to display the camera feed
         self.label = QLabel(self)
@@ -32,47 +36,38 @@ class MainWindow(QWidget):
         self.quitbutton = QPushButton('Quit', self.background)
         self.quitbutton.setGeometry(1750, 40, 150, 50)
         self.quitbutton.clicked.connect(self.quit_app)
-        
-        # Open the camera
-        self.capture = cv2.VideoCapture(0)
-        
-        # Set the camera's resolution
-        self.capture.set(3, 1024)  # 3 corresponds to width
-        self.capture.set(4, 576)  # 4 corresponds to height
-        
-        # Create a timer to continuously update the camera feed
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.update_camera_feed)
-        self.timer.start(30)  # In milliseconds
-        
+
         # Create a frame with a border
         frame = QFrame(self)
         frame.setFrameShape(QFrame.Box)  # You can use QFrame.Box for a solid border
         frame.setFrameShadow(QFrame.Sunken)
         frame.setGeometry(1400, 150, 450, 720)
+
+    def startCameraFeed(self):
+        # Create a timer to continuously update the camera feed
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_camera_feed)
+        self.timer.start(30)  # In milliseconds 
+
+    def initCamera(self):
+        # Open the camera
+        self.capture = cv2.VideoCapture(0)
         
-        # Text Label
-        self.textlabel = QLabel(frame)
-        self.textlabel.setGeometry(50, 0, 450, 720)
-        self.textlabel.setStyleSheet("color: white")
-        self.update_label_text("Event Log:  Coming Soon")
+        # Set the camera's resolution
+        self.capture.set(3, CAMERA_WIDTH)  # 3 corresponds to width
+        self.capture.set(4, CAMERA_HEIGHT)  # 4 corresponds to height
 
     def update_label_text(self, text):
         self.textlabel.setText(text)
- 
 
     def update_camera_feed(self):
         recognizer = cv2.face.LBPHFaceRecognizer_create()
-        recognizer.read('assets/Trainer/trainer.yml')
-        cascadePath = "assets/Cascades/haarcascade_frontalface_default.xml"
-        faceCascade = cv2.CascadeClassifier(cascadePath)
+        recognizer.read(TRAINER_PATH)
+        faceCascade = cv2.CascadeClassifier(CASCADE_PATH)
         font = cv2.FONT_HERSHEY_SIMPLEX
-        # Load classifier for face detection
-        faceCascade = cv2.CascadeClassifier('assets/Cascades/haarcascade_frontalface_default.xml')
-        # Initiate id counter
-        id = 0
 
-       
+        # Load classifier for face detection
+        faceCascade = cv2.CascadeClassifier(CASCADE_PATH)
 
         # Take frame capture 
         ret, frame = self.capture.read()
@@ -95,7 +90,7 @@ class MainWindow(QWidget):
                 
                 # If confidence is less them 100 ==> "0" : perfect match 
                 if (confidence < 90 ):
-                    id = names[id]
+                    id = NAMES[id]
                     confidence = "  {0}%".format(round(100 - confidence))
                 else:
                     id = "Unknown"
