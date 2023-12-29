@@ -3,9 +3,9 @@ import cv2
 import numpy as np
 import os
 from load_names import load_names_from_file
-from PySide6.QtCore import Qt, QTimer, Slot, Signal
-from PySide6.QtGui import QImage, QPixmap, QPainter 
-from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton, QFrame
+from PySide6.QtCore import QTimer
+from PySide6.QtGui import QImage, QPixmap
+from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QFrame, QTableWidget, QTableWidgetItem
 
 
 CAMERA_WIDTH = 1024
@@ -37,11 +37,14 @@ class MainWindow(QWidget):
         self.quitbutton.setGeometry(1750, 40, 150, 50)
         self.quitbutton.clicked.connect(self.quit_app)
 
-        # Create a frame with a border
-        frame = QFrame(self)
-        frame.setFrameShape(QFrame.Box)  # You can use QFrame.Box for a solid border
-        frame.setFrameShadow(QFrame.Sunken)
-        frame.setGeometry(1400, 150, 450, 720)
+        # Table
+        self.table = QTableWidget(self)
+        self.table.setRowCount(1)
+        self.table.setColumnCount(1)
+        self.table.setHorizontalHeaderLabels(["Known Users"])
+        self.table.setGeometry(1400, 150, 450, 720)
+        self.table.setStyleSheet("font-size: 20px;")
+        self.table.setColumnWidth(0, 450)
 
     def startCameraFeed(self):
         # Create a timer to continuously update the camera feed
