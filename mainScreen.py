@@ -41,7 +41,7 @@ class MainWindow(QWidget):
         # Create add user button
         self.add_user_button = QPushButton('Add User', self)
         self.add_user_button.setGeometry(1750, 100, 150, 50)
-        self.add_user_button.clicked.connect(self.add_user_func)
+        self.add_user_button.clicked.connect(self.add_user_button_clicked)
 
         # Table
         self.table = QTableWidget(self)
@@ -52,7 +52,7 @@ class MainWindow(QWidget):
         self.table.setStyleSheet("font-size: 20px;")
         self.table.setColumnWidth(0, 450)
         # Test setting data
-        self.table.setItem(0, 0, QTableWidgetItem(str(NAMES[1]))) # Need to make this scalable
+        self.table.setItem(0, 0, QTableWidgetItem(str(NAMES[str(1)]))) # Need to make this scalable
 
     def startCameraFeed(self):
         # Create a timer to continuously update the camera feed
@@ -101,7 +101,7 @@ class MainWindow(QWidget):
                 
                 # If confidence is less them 100 ==> "0" : perfect match 
                 if (confidence < 90 ):
-                    id = NAMES[id]
+                    id = NAMES[str(id)]
                     confidence = "  {0}%".format(round(100 - confidence))
                 else:
                     id = "Unknown"
@@ -132,10 +132,11 @@ class MainWindow(QWidget):
         # Update the QLabel with the frame
         self.label.setPixmap(frame_pixmap)
 
-    def add_user_func(self):
-        # add_user()    ### Make thread and gui popup then auto train 
-        AddUser.add_user_button_click
-
+    def add_user_button_clicked(self):
+        self.capture.release()
+        self.add_user_dialog = AddUser()
+        self.add_user_dialog.exec()
+        
     def quit_app(self):
         sys.exit()
 
