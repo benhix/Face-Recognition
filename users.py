@@ -1,6 +1,6 @@
 import json
 
-NAMES_PATH = 'assets/Names/names.json'
+NAMES_PATH = 'assets/names/names.json'
 
 def load_names_from_file(file_path):
     try:

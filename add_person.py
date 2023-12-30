@@ -1,18 +1,18 @@
 import cv2
 import os
-from load_names import load_names_from_file, save_names_to_file
+from users import load_names_from_file, save_names_to_file
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QLabel, QPushButton, QTextEdit
+from PySide6.QtWidgets import QDialog, QLabel, QPushButton, QTextEdit
 
-DATASET_PATH = "assets/Dataset"
-CASCADE_PATH = 'assets/Cascades/haarcascade_frontalface_default.xml'
-NAMES = load_names_from_file('assets/Names/names.json')
+DATASET_PATH = "assets/dataset"
+CASCADE_PATH = 'assets/cascades/haarcascade_frontalface_default.xml'
+NAMES = load_names_from_file('assets/names/names.json')
 
 class AddUser(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.label = QLabel("Please enter your name then press ok and look at the camera for a few seconds", self)
+        self.label = QLabel("Please enter your name then press ok and look at the camera for 10 seconds\nProgram will restart", self)
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setGeometry(0, 0, 500, 150)
 
@@ -26,7 +26,6 @@ class AddUser(QDialog):
         
 
     def add_user_button_click(self, _=None):
-        # Check if the dataset directory exists, if not, create it
         if not os.path.exists(DATASET_PATH):
             os.makedirs(DATASET_PATH)
 
@@ -53,19 +52,14 @@ class AddUser(QDialog):
                 count += 1
 
                 # Save the captured image into the datasets folder
-                cv2.imwrite("assets/Dataset/user." + str(face_id) + '.' +  
+                cv2.imwrite("assets/dataset/user." + str(face_id) + '.' +  
                             str(count) + ".jpg", gray[y:y+h,x:x+w])
                 cv2.imshow('image', img)
-
-            k = cv2.waitKey(100) & 0xff # Press 'ESC' for exiting video
-
-            if k == 27:
-                break
-            elif count >= 30: # Take 30 face sample and stop video
+            
+            if count >= 30: # Take 30 face sample and stop video
                 break
 
         # Cleanup
-        print("\n [INFO] Exiting Program")
         cam.release()
         cv2.destroyAllWindows()
         self.accept()

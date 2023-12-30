@@ -2,8 +2,9 @@ import sys
 import cv2
 import numpy as np
 import os
-from load_names import load_names_from_file
-from addPerson import AddUser
+from users import load_names_from_file
+from trainer import train_model
+from add_person import AddUser
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QFrame, QTableWidget, QTableWidgetItem
@@ -12,9 +13,9 @@ from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QFrame, QTableWidget
 CAMERA_WIDTH = 1024
 CAMERA_HEIGHT = 576
 CAMERA_FPS = 30
-TRAINER_PATH = 'assets/Trainer/trainer.yml'
-CASCADE_PATH = 'assets/Cascades/haarcascade_frontalface_default.xml'
-NAMES = load_names_from_file('assets/Names/names.json')
+TRAINER_PATH = 'assets/trainer/trainer.yml'
+CASCADE_PATH = 'assets/cascades/haarcascade_frontalface_default.xml'
+NAMES = load_names_from_file('assets/names/names.json')
 
 class MainWindow(QWidget):
     def __init__(self, parent=None):
@@ -136,6 +137,8 @@ class MainWindow(QWidget):
         self.capture.release()
         self.add_user_dialog = AddUser()
         self.add_user_dialog.exec()
+
+        train_model()
         
     def quit_app(self):
         sys.exit()
