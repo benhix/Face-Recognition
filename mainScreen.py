@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import os
 from load_names import load_names_from_file
+from addPerson import AddUser
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QFrame, QTableWidget, QTableWidgetItem
@@ -37,6 +38,11 @@ class MainWindow(QWidget):
         self.quitbutton.setGeometry(1750, 40, 150, 50)
         self.quitbutton.clicked.connect(self.quit_app)
 
+        # Create add user button
+        self.add_user_button = QPushButton('Add User', self)
+        self.add_user_button.setGeometry(1750, 100, 150, 50)
+        self.add_user_button.clicked.connect(self.add_user_func)
+
         # Table
         self.table = QTableWidget(self)
         self.table.setRowCount(1)
@@ -45,6 +51,8 @@ class MainWindow(QWidget):
         self.table.setGeometry(1400, 150, 450, 720)
         self.table.setStyleSheet("font-size: 20px;")
         self.table.setColumnWidth(0, 450)
+        # Test setting data
+        self.table.setItem(0, 0, QTableWidgetItem(str(NAMES[1]))) # Need to make this scalable
 
     def startCameraFeed(self):
         # Create a timer to continuously update the camera feed
@@ -123,6 +131,10 @@ class MainWindow(QWidget):
     def update_label(self, frame_pixmap):
         # Update the QLabel with the frame
         self.label.setPixmap(frame_pixmap)
+
+    def add_user_func(self):
+        # add_user()    ### Make thread and gui popup then auto train 
+        AddUser.add_user_button_click
 
     def quit_app(self):
         sys.exit()
