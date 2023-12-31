@@ -5,7 +5,7 @@ import os
 
 
 # Path for face image database
-path = 'assets/dataset'
+DATASET_PATH = 'assets/dataset'
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 detector = cv2.CascadeClassifier("assets/cascades/haarcascade_frontalface_default.xml")
 
@@ -29,7 +29,7 @@ def train_model(path):
 
 print ("\n [INFO] Training faces. It will take a few seconds. Wait ...")
 
-faces,ids = getImagesAndLabels(path)
+faces,ids = train_model(DATASET_PATH)
 recognizer.train(faces, np.array(ids))
 
 # Save the model into trainer/trainer.yml

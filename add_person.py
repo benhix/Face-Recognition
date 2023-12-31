@@ -2,7 +2,7 @@ import cv2
 import os
 from users import load_names_from_file, save_names_to_file
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QDialog, QLabel, QPushButton, QTextEdit
+from PySide6.QtWidgets import QDialog, QLabel, QPushButton, QTextEdit, QApplication
 
 DATASET_PATH = "assets/dataset"
 CASCADE_PATH = 'assets/cascades/haarcascade_frontalface_default.xml'
@@ -63,3 +63,4 @@ class AddUser(QDialog):
         cam.release()
         cv2.destroyAllWindows()
         self.accept()
+

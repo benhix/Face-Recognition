@@ -1,13 +1,14 @@
 import sys
 import cv2
-import numpy as np
 import os
+import subprocess
+import numpy as np
 from users import load_names_from_file
 from trainer import train_model
 from add_person import AddUser
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QImage, QPixmap
-from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QFrame, QTableWidget, QTableWidgetItem
+from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QTableWidget, QTableWidgetItem, QApplication
 
 
 CAMERA_WIDTH = 1024
@@ -16,6 +17,7 @@ CAMERA_FPS = 30
 TRAINER_PATH = 'assets/trainer/trainer.yml'
 CASCADE_PATH = 'assets/cascades/haarcascade_frontalface_default.xml'
 NAMES = load_names_from_file('assets/names/names.json')
+DATASET_PATH = 'assets/dataset'
 
 class MainWindow(QWidget):
     def __init__(self, parent=None):
@@ -46,14 +48,16 @@ class MainWindow(QWidget):
 
         # Table
         self.table = QTableWidget(self)
-        self.table.setRowCount(1)
+        self.table.setRowCount(len(NAMES))
         self.table.setColumnCount(1)
         self.table.setHorizontalHeaderLabels(["Known Users"])
         self.table.setGeometry(1400, 150, 450, 720)
         self.table.setStyleSheet("font-size: 20px;")
         self.table.setColumnWidth(0, 450)
         # Test setting data
-        self.table.setItem(0, 0, QTableWidgetItem(str(NAMES[str(1)]))) # Need to make this scalable
+        for row, (num, name) in enumerate(NAMES.items()):
+            set_name = QTableWidgetItem(name)
+            self.table.setItem(row, 0, set_name) # Need to make this scalable
 
     def startCameraFeed(self):
         # Create a timer to continuously update the camera feed
@@ -138,8 +142,14 @@ class MainWindow(QWidget):
         self.add_user_dialog = AddUser()
         self.add_user_dialog.exec()
 
-        train_model()
+        train_model(DATASET_PATH)
+        self.restart_app()
         
     def quit_app(self):
         sys.exit()
+
+    def restart_app(self):
+        QApplication.quit() 
+        subprocess.Popen([sys.executable, 'main.py'])
+    
 
